@@ -10,15 +10,9 @@ namespace CleanCode
 			//open files
 		    FileStream fileStreamBackup;
 		    var fileStream = OpenFileStream(filePath, out fileStreamBackup);
-
-		    // write data
-			WriteDataToFile(dataToWtiteBytes, fileStream, fileStreamBackup);
-
-		    // close files
-			CloseFiles(fileStream, fileStreamBackup);
-
-		    // save last-write time
-			SaveLastWriteTime(filePath);
+            WriteDataToFile(dataToWtiteBytes, fileStream, fileStreamBackup);
+            CloseFiles(fileStream, fileStreamBackup);
+            SaveLastWriteTime(filePath);
 		}
 
 	    private static FileStream OpenFileStream(string filePath, out FileStream fileStreamBackup)
