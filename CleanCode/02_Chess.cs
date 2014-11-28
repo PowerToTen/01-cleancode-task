@@ -34,14 +34,11 @@ namespace CleanCode
 
 		private bool CheckForWhite()
 		{
-			foreach (Loc location in board.Figures(Cell.Black))
-			{
-				var cell = board.Get(location);
-				var moves = cell.Figure.Moves(location, board);
-				if (moves.Any(to => board.Get(to).IsWhiteKing))
-				    return true;
-			}
-			return false;
+		    return (from location in board.Figures(Cell.Black) 
+                    let cell = board.Get(location) 
+                    select cell.Figure
+                    .Moves(location, board))
+                    .Any(moves => moves.Any(canMoveTo => board.Get(canMoveTo).IsWhiteKing));
 		}
 	}
 }
