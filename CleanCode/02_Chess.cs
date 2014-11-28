@@ -1,51 +1,46 @@
-﻿namespace CleanCode
+﻿using System.Linq;
+
+namespace CleanCode
 {
 	public class Chess
 	{
-		private readonly Board b;
+		private readonly Board board;
 
-		public Chess(Board b)
+		public Chess(Board board)
 		{
-		this.b = b;
+		this.board = board;
 		}
 
-		public string getWhiteStatus() {
-			bool bad=checkForWhite();
-			bool ok=  false;
-			foreach (Loc loc1 in b.Figures(Cell.White))
+		public string GetWhiteStatus() {
+			var underCheck = CheckForWhite();
+			var canMove =  false;
+			foreach (Loc figureLocation in board.Figures(Cell.White))
 			{
-				foreach (Loc loc2 in b.Get(loc1).Figure.Moves(loc1, b)){
-				Cell old_dest = b.PerformMove(loc1, loc2);
-				if (!checkForWhite( ))
-					ok = true;
-				b.PerformUndoMove(loc1, loc2, old_dest);
+				foreach (Loc figureMoves in board.Get(figureLocation).Figure.Moves(figureLocation, board)){
+				Cell oldDest = board.PerformMove(figureLocation, figureMoves);
+				if (!CheckForWhite( ))
+					canMove = true;
+				board.PerformUndoMove(figureLocation, figureMoves, oldDest);
 				}
-				
-				
-				
 			}
-			if (bad)
-				if (ok)
+			if (underCheck)
+				if (canMove)
 					return "check";
 				else return "mate";
-				if (ok)	return "ok";
+			if (canMove)	
+                return "ok";
 			return "stalemate";
 		}
 
-		private bool checkForWhite()
+		private bool CheckForWhite()
 		{
-			bool bFlag = false;
-			foreach (Loc loc in b.Figures(Cell.Black))
+			foreach (Loc location in board.Figures(Cell.Black))
 			{
-				var cell = b.Get(loc);
-				var moves = cell.Figure.Moves(loc, b);
-				foreach (Loc to in moves)
-				{
-					if (b.Get(to).IsWhiteKing)
-						bFlag = true;
-				}
+				var cell = board.Get(location);
+				var moves = cell.Figure.Moves(location, board);
+				if (moves.Any(to => board.Get(to).IsWhiteKing))
+				    return true;
 			}
-			if (bFlag) return true;
 			return false;
 		}
 	}
